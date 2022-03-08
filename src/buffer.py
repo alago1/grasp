@@ -1,12 +1,22 @@
+import operator
+from functools import reduce
+from typing import Iterator, cast
+
 import av
 import numpy as np
 from PIL import Image
-from functools import reduce
-import operator
-from typing import Iterator, cast
+
+# pylint: disable=fixme
 
 
 def get_frame_data(path: str) -> Iterator[Image.Image]:
+    """
+    Returns iterator of relevant frames (Pillow Image)
+    given a path to a mp4
+    """
+
+    # FIXME: Assert that path is valid
+
     with av.open(path) as container:
         stream = container.streams.video[0]
         stream.codec_context.skip_frame = "NONKEY"
