@@ -8,6 +8,7 @@ av = "*"
 pillow = "*"
 numpy = "*"
 pylint = "*"
+google-cloud-vision = "*"
 
 [dev-packages]
 black = "*"
