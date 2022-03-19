@@ -27,8 +27,6 @@ def detect_text(im: Iterator[Image.Image]):
         response = client.text_detection(image=image)
         texts = response.text_annotations
 
-        print("Texts:")
-
         out = []
         i = 0
 
