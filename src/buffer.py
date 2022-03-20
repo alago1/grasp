@@ -7,16 +7,15 @@ import numpy as np
 from PIL import Image
 
 
-
-
-
-
-
 def get_frame_data(path: str) -> Iterator[Image.Image]:
     """
     Returns iterator of relevant frames (Pillow Image)
     given a path to a mp4
     """
+
+
+
+
 
     # FIXME: Assert that path is valid
 
