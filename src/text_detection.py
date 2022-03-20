@@ -1,4 +1,5 @@
 import io
+from typing import List
 
 from google.cloud import vision
 from PIL import Image
@@ -18,16 +19,10 @@ def detect_text(image: Image.Image) -> str:
     response = client.text_detection(image=image)
     texts = response.text_annotations
 
-    out = []
+    out: List[str] = []
 
     for text in texts:
-        # print('\n"{}"'.format(text.description))
         out.append(text.description)
-
-        # vertices = [
-        #     f"({vertex.x},{vertex.y})"
-        #     for vertex in text.bounding_poly.vertices
-        # ]
 
     if response.error.message:
         raise Exception(
