@@ -5,22 +5,34 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
+  pre-merge:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: cimg/base:stable
+      - image: paketobuildpacks/pipenv-install
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Install Requirements"
+          command: "pipenv install"
+      - run:
+          name: "Run isort"
+          command: "pipenv run isort src/"
+      - run:
+          name: "Run black"
+          command: "pipenv run black src/"
+      - run:
+          name: "Run pylint"
+          command: "pipenv run pylint src/"
+      - run:
+          name: "Run mypy"
+          command: "pipenv run mypy src/"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  pre-merge-workflow:
     jobs:
-      - say-hello
+      - pre-merge
