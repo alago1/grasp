@@ -9,7 +9,7 @@ from PIL import Image
 # pylint: disable=fixme
 
 
-def get_frame_data(path: str) -> None:
+def get_frame_data(path: str) -> Iterator[Image.Image]:
     """
     Returns iterator of relevant frames (Pillow Image)
     given a path to a mp4
