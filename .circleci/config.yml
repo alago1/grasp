@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run:
           name: "Install Requirements"
-          command: "pipenv install"
+          command: "python3.9 -m pipenv install"
       - run:
           name: "Run isort"
           command: "pipenv run isort src/"
