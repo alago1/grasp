@@ -19,16 +19,16 @@ jobs:
           command: "python3.9 -m pipenv install"
       - run:
           name: "Run isort"
-          command: "pipenv run isort src/"
+          command: "python3.9 -m pipenv run isort src/"
       - run:
           name: "Run black"
-          command: "pipenv run black src/"
+          command: "python3.9 -m pipenv run black src/"
       - run:
           name: "Run pylint"
-          command: "pipenv run pylint src/"
+          command: "python3.9 -m pipenv run pylint src/"
       - run:
           name: "Run mypy"
-          command: "pipenv run mypy src/"
+          command: "python3.9 -m pipenv run mypy src/"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
