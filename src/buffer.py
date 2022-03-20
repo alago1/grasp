@@ -1,8 +1,8 @@
 import operator
+import av
 from functools import reduce
 from typing import Iterator, cast
 
-import av
 import numpy as np
 from PIL import Image
 
