@@ -16,13 +16,13 @@ jobs:
       - checkout
       - run:
           name: "Install Requirements"
-          command: "python3.9 -m pipenv install --system --deploy --ignore-pipfile"
+          command: "python3.9 -m pipenv install --system --deploy --ignore-pipfile --dev"
       - run:
           name: "Run isort"
           command: "python3.9 -m isort src/"
       - run:
           name: "Run black"
-          command: "#python3.9 -m black src/"
+          command: "python3.9 -m black src/"
       - run:
           name: "Run pylint"
           command: "python3.9 -m pylint src/"
