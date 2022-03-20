@@ -6,6 +6,8 @@ import av
 import numpy as np
 from PIL import Image
 
+# pylint: disable=fixme
+
 
 def get_frame_data(path: str) -> Iterator[Image.Image]:
     """
