@@ -1,35 +1,38 @@
 import io
 
 from google.cloud import vision
+from PIL import Image
 
 
-# FIXME: output should be returned, not printed
-def detect_text(path):
+def detect_text(image: Image.Image) -> str:
     """Detects text in the file."""
 
     client = vision.ImageAnnotatorClient()
 
-    with io.open(path, "rb") as image_file:
-        content = image_file.read()
+    temp = io.BytesIO()
+    image.save(temp, format="PNG")
+    content = temp.getvalue()
 
     image = vision.Image(content=content)
 
     response = client.text_detection(image=image)
     texts = response.text_annotations
-    print("Texts:")
+
+    out = []
 
     for text in texts:
-        print('\n"{}"'.format(text.description))
+        # print('\n"{}"'.format(text.description))
+        out.append(text.description)
 
-        vertices = [
-            "({},{})".format(vertex.x, vertex.y)
-            for vertex in text.bounding_poly.vertices
-        ]
-
-        print("bounds: {}".format(",".join(vertices)))
+        # vertices = [
+        #     f"({vertex.x},{vertex.y})"
+        #     for vertex in text.bounding_poly.vertices
+        # ]
 
     if response.error.message:
         raise Exception(
-            "{}\nFor more info on error messages, check: "
-            "https://cloud.google.com/apis/design/errors".format(response.error.message)
+            "{response.error.message}\nFor more info on error messages, check: "
+            "https://cloud.google.com/apis/design/errors"
         )
+
+    return out[0] if len(out) > 0 else ""

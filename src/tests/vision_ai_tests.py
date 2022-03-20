@@ -1,4 +1,6 @@
+from PIL import Image
+
 from text_detection import detect_text
 
-# TODO: assert output is the expected
-detect_text("src/tests/data/unknown.png")
+# will fail
+assert detect_text(Image.open("src/tests/data/probability.1130400.jpg")) == ""
