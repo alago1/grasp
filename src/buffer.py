@@ -13,10 +13,6 @@ def get_frame_data(path: str) -> Iterator[Image.Image]:
     given a path to a mp4
     """
 
-
-
-
-
     # FIXME: Assert that path is valid
 
     with av.open(path) as container:
