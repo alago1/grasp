@@ -6,12 +6,8 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   pre-merge:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       - image: alago1/ubuntu-pipenv39:0.0.1
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
       - run:
@@ -29,6 +25,16 @@ jobs:
       - run:
           name: "Run mypy"
           command: "python3.9 -m mypy src/ --check"
+  
+  say-hello:
+    docker:
+      - image: cimg/base:stable
+    
+    steps:
+      - checkout
+      - run:
+        name: "Say hello"
+        command: "echo Hello, World!"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -36,3 +42,4 @@ workflows:
   pre-merge-workflow:
     jobs:
       - pre-merge
+      - say-hello
