@@ -8,6 +8,8 @@ av = "*"
 pillow = "*"
 numpy = "*"
 google-cloud-vision = "*"
+spacy = "*"
+wikipedia = "*"
 
 [dev-packages]
 black = "*"

@@ -12,6 +12,7 @@
 1. Make sure you have python 3.9 installed. Then, run `python3.9 -m pip install pipenv`.
 2. In the project directory, run `python3.9 -m pipenv install` and `python3.9 -m pipenv install --system`.
 3. Run `pre-commit install`. This should be enough so, to verify, run `pre-commit run --all-files`. All processes should pass.
+4. Run `python3.9 -m spacy download en_core_web_sm`.
 
 ##### Running
 
