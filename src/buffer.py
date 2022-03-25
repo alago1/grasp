@@ -13,9 +13,12 @@ def get_frame_data(path: str) -> Iterator[Image.Image]:
     """
     Returns iterator of relevant frames (Pillow Image)
     given a path to a mp4
-    """
 
-    # FIXME: Assert that path is valid
+    If path is not found, raises FileNotFoundError.
+    If path is of invalid file, raises InvalidDataError.
+    If path is of a directory, raises IsADirectoryError.
+    If path cannot be accessed due to permissions, raises PermissionError.
+    """
 
     with av.open(path) as container:
         stream = container.streams.video[0]
