@@ -41,6 +41,7 @@ def select_file(root: tk.Tk) -> None:
 
     filepath = fd.askopenfilename(
         title="Open file",
+        # TODO: Change this to a better root directory
         initialdir="~/Documents/uf/cen3032/imgBuffer/data",
         filetypes=filetypes,
     )
