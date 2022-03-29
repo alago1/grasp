@@ -18,6 +18,7 @@ pre-commit = "*"
 mypy = "*"
 types-pillow = "*"
 pylint = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.9"
