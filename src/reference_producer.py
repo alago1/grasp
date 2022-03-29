@@ -18,9 +18,13 @@ def get_references(text: str) -> List[Tuple[str, str]]:
     doc = NLP_MODEL(text)
 
     references: List[Tuple[str, str]] = []
-    for chunk in set(doc.noun_chunks):
-        if len(chunk.text) <= 3:
+    noun_chunks = set()
+    for chunk in doc.noun_chunks:
+        if len(chunk.text) <= 3 or chunk.text in noun_chunks:
             continue
+
+        noun_chunks.add(chunk.text)
+
         try:
             query = wikipedia.page(chunk.text)
             references.append((chunk.text, query.url))
