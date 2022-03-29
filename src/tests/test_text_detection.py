@@ -1,9 +1,8 @@
 import pytest
 from PIL import Image
 
+# pylint: disable=too-few-public-methods, import-error
 from src.text_detection import detect_text
-
-# pylint: disable=too-few-public-methods
 
 
 class TextDetectionProxy:
