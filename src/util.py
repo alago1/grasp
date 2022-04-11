@@ -1,8 +1,10 @@
+from dataclasses import dataclass
 from math import floor
-from typing import List, Optional
+from tkinter import SE, Canvas
+from typing import List, Optional, Tuple
 
 import av
-from PIL import Image
+from PIL import Image, ImageTk
 
 
 def produce_video_preview(path: str) -> Optional[List[Image.Image]]:
@@ -44,3 +46,55 @@ def produce_video_preview(path: str) -> Optional[List[Image.Image]]:
     ):
         print("failed to read")
         return None
+
+
+@dataclass
+class PreviewInstance:
+    """
+    Dataclass for abstracting GUI Preview data
+    """
+
+    canvas: Optional[Canvas] = None
+    preview: Optional[Tuple[ImageTk.PhotoImage, ...]] = None
+    state: str = "success"
+    curr_frame: int = -1
+    container_id: int = -1
+
+    def next_frame(self) -> int:
+        """
+        Sets preview frame to following frame if the video has been loaded.
+        If no video has been loaded or the canvas is None, returns -1.
+        Otherwise, returns index of new frame.
+        """
+
+        if self.preview is None or self.canvas is None:
+            return -1
+
+        self.curr_frame = (self.curr_frame + 1) % len(self.preview)
+        self.canvas.itemconfig(self.container_id, image=self.preview[self.curr_frame])
+
+        return self.curr_frame
+
+    def load_new_preview(self, filepath: str) -> int:
+        """
+        Given a filepath to a video file, produces video preview and displays on GUI.
+        If the filepath is not valid or no canvas has been created, returns -1.
+        """
+
+        if self.canvas is None:
+            return -1
+
+        prev = produce_video_preview(filepath)
+
+        if prev is None:
+            self.state = "failed"
+            return -1
+
+        self.state = "success"
+        self.preview = tuple(ImageTk.PhotoImage(p) for p in prev)
+        self.curr_frame = 0
+
+        self.container_id = self.canvas.create_image(
+            300, 300, anchor=SE, image=self.preview[self.curr_frame]
+        )
+        return 0
