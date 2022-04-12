@@ -5,6 +5,7 @@ from google.cloud import vision
 from PIL import Image
 
 
+# ADD: Consider including a layer to processes out Watermarks and Logos
 def detect_text(image: Image.Image) -> str:
     """Detects text in the file."""
 
