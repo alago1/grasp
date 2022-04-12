@@ -1,6 +1,6 @@
 import operator
 from functools import reduce
-from typing import Iterator, cast
+from typing import Iterator, Tuple
 
 import av
 import numpy as np
@@ -9,7 +9,7 @@ from PIL import Image
 # pylint: disable=fixme
 
 
-def get_frame_data(path: str) -> Iterator[Image.Image]:
+def get_frame_data(path: str) -> Iterator[Tuple[int, Image.Image]]:
     """
     Returns iterator of relevant frames (Pillow Image)
     given a path to a mp4
@@ -47,4 +47,4 @@ def get_frame_data(path: str) -> Iterator[Image.Image]:
             last_keyframe = array
             last_pts = frame.pts
 
-            yield cast(Image.Image, last_keyframe.to_image())
+            yield (frame.time, last_keyframe.to_image())
