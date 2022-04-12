@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 from math import floor
-from tkinter import SE, Canvas
+from os import path
+from tkinter import Canvas, Label, Tk
 from typing import List, Optional, Tuple
 
 import av
 from PIL import Image, ImageTk
 
 
-def produce_video_preview(path: str) -> Optional[List[Image.Image]]:
+def produce_video_preview(filepath: str) -> Optional[List[Image.Image]]:
     """
     Given a path string, returns a list of PIL Images with
     up to first 50 frames of the video as a preview.
@@ -17,7 +18,7 @@ def produce_video_preview(path: str) -> Optional[List[Image.Image]]:
     """
 
     try:
-        with av.open(path) as container:
+        with av.open(filepath) as container:
             stream = container.streams.video[0]
             stream.codec_context.skip_frame = "NONKEY"
 
@@ -54,9 +55,10 @@ class PreviewInstance:
     Dataclass for abstracting GUI Preview data
     """
 
+    root: Optional[Tk] = None
+    title: Optional[Label] = None
     canvas: Optional[Canvas] = None
     preview: Optional[Tuple[ImageTk.PhotoImage, ...]] = None
-    state: str = "success"
     curr_frame: int = -1
     container_id: int = -1
 
@@ -81,20 +83,30 @@ class PreviewInstance:
         If the filepath is not valid or no canvas has been created, returns -1.
         """
 
-        if self.canvas is None:
+        if self.canvas is None or self.title is None:
             return -1
 
         prev = produce_video_preview(filepath)
 
         if prev is None:
-            self.state = "failed"
             return -1
 
-        self.state = "success"
-        self.preview = tuple(ImageTk.PhotoImage(p) for p in prev)
+        filename = path.split(filepath)[-1]
+        self.title.config(text=f"Previewing: {filename}")
+
+        width, height = self.canvas.winfo_width(), self.canvas.winfo_height()
+
+        scale = 15
+        self.preview = tuple(
+            ImageTk.PhotoImage(p.resize((16 * scale, 9 * scale))) for p in prev
+        )
         self.curr_frame = 0
 
         self.container_id = self.canvas.create_image(
-            300, 300, anchor=SE, image=self.preview[self.curr_frame]
+            width // 2,
+            height // 2,
+            image=self.preview[self.curr_frame],
+            anchor="center",
         )
+
         return 0
