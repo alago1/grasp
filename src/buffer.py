@@ -40,11 +40,13 @@ def get_frame_data(path: str) -> Iterator[Tuple[int, Image.Image]]:
             diff = abs(last_keyframe - array)
             diff_rate = np.count_nonzero(diff) / reduce(operator.mul, diff.shape)
 
-            # skip if less than 10% of frame changed since last key
-            if diff_rate <= 0.1:
+            # skip if less than 15% of frame changed since last key
+            if diff_rate <= 0.15:
                 continue
 
             last_keyframe = array
             last_pts = frame.pts
 
-            yield (frame.time, last_keyframe.to_image())
+            img = Image.fromarray(last_keyframe, "RGB")
+
+            yield (frame.time, img)
