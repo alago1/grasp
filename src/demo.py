@@ -12,7 +12,8 @@ from text_detection import detect_text
 # print(f"DEMO REFERENCES:\n{refers}")
 
 tsrefs = process_references(
-    "/home/allanlago/Documents/uf/cen3032/imgBuffer/data/probability.mp4"
+    "/home/allanlago/Documents/uf/cen3032/imgBuffer/data/probability.mp4",
+    "/home/allanlago/Documents/uf/cen3032/groupProject/fake",
 )
 for tsp, refs in tsrefs:
     print(f"Timestamp: {tsp}")

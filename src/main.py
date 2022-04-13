@@ -1,25 +1,51 @@
 import threading
+import time
 import tkinter as tk
+from os import path
 from tkinter import NE, Canvas, Label, OptionMenu, StringVar
 from tkinter import filedialog as fd
+from tkinter import messagebox as mb
 from tkinter import ttk
+from typing import Optional
 
 from PIL import Image, ImageTk
 
 from util import PreviewInstance
 
-# pylint: disable=missing-function-docstring
+# pylint: disable=missing-function-docstring, global-statement
 
 
 PREVIEW_PLAYER = PreviewInstance()
+OUTPUT_FOLDER_PATH: Optional[str] = None
+OUTPUT_FOLDER_LABEL: Optional[StringVar] = None
+OUTPUT_FILETYPE: Optional[StringVar] = None
+PROCESSING_OUTPUT_LABEL: Optional[StringVar] = None
 
 
-def update_preview_frame(root: tk.Tk) -> None:
+def update_preview_frame(root: tk.Tk, frame_id: Optional[int] = None) -> None:
+    if frame_id is not None and PREVIEW_PLAYER.container_id != frame_id:
+        return None
 
     next_frame = PREVIEW_PLAYER.next_frame()
 
     if next_frame >= 0:
-        root.after(100, update_preview_frame, root)
+        root.after(100, update_preview_frame, root, PREVIEW_PLAYER.container_id)
+
+
+def select_output_folder() -> None:
+    global OUTPUT_FOLDER_PATH
+
+    if OUTPUT_FOLDER_LABEL is None:
+        return None
+
+    folderpath = fd.askdirectory(title="Select Directory")
+
+    if len(folderpath) < 1:
+        return None
+
+    OUTPUT_FOLDER_PATH = folderpath
+    folder_name = path.split(folderpath)[-1]
+    OUTPUT_FOLDER_LABEL.set(f"Selected folder: {folder_name}")
 
 
 def select_file(root: tk.Tk) -> None:
@@ -27,12 +53,9 @@ def select_file(root: tk.Tk) -> None:
 
     filepath = fd.askopenfilename(
         title="Open file",
-        # TODO: Change this to a better root directory
         initialdir="~/Documents/uf/cen3032/imgBuffer/data",
         filetypes=filetypes,
     )
-
-    print(filepath, len(filepath))
 
     if len(filepath) < 1:
         return None
@@ -44,11 +67,37 @@ def select_file(root: tk.Tk) -> None:
     return None
 
 
+def find_references() -> None:
+    # TODO: call functions to start exporting process
+
+    if PROCESSING_OUTPUT_LABEL is None:
+        return
+
+    if PREVIEW_PLAYER.video_path is None:
+        mb.showerror("No video selected", message="Please select a video.")
+        return
+
+    if OUTPUT_FOLDER_PATH is None:
+        mb.showerror(
+            "No output folder selected", message="Please select an output folder."
+        )
+        return
+
+    PROCESSING_OUTPUT_LABEL.set("Parsing References...")
+
+    time.sleep(5)
+
+    PROCESSING_OUTPUT_LABEL.set("Successfully exported references")
+    mb.showinfo(
+        "Export complete", message=f"References exported to {OUTPUT_FOLDER_PATH}"
+    )
+
+
 def main(root: tk.Tk) -> None:
+    global OUTPUT_FOLDER_LABEL, OUTPUT_FILETYPE, PROCESSING_OUTPUT_LABEL
+
     root.title("Grasp")
     root.minsize(width=500, height=500)
-
-    PREVIEW_PLAYER.root = root
 
     img = ImageTk.PhotoImage(
         Image.open("grasp_logo.png")
@@ -72,24 +121,37 @@ def main(root: tk.Tk) -> None:
     PREVIEW_PLAYER.canvas = Canvas(root, width=320, height=180)
     PREVIEW_PLAYER.canvas.pack(expand=True)
 
+    OUTPUT_FOLDER_LABEL = StringVar(root)
+    OUTPUT_FOLDER_LABEL.set("No folder selected")
+
     output_folder_button = ttk.Button(
-        root, text="Select output folder", command=lambda: "DO NOTHING"
+        root,
+        text="Select output folder",
+        command=lambda: threading.Thread(target=select_output_folder).start(),
     )
     output_folder_button.pack(expand=True)
 
-    output_folder_label = Label(root, text=f"Selected folder: {None}")
-    output_folder_label.pack(expand=True)
+    output_folder_label2 = Label(root, textvariable=OUTPUT_FOLDER_LABEL)
+    output_folder_label2.pack(expand=True)
 
-    output_type = StringVar(root)
-    output_type.set("TXT")
+    OUTPUT_FILETYPE = StringVar(root)
+    OUTPUT_FILETYPE.set("TXT")
 
-    output_type_dropdown = OptionMenu(root, output_type, "TXT", "PDF")
+    output_type_dropdown = OptionMenu(root, OUTPUT_FILETYPE, "TXT", "PDF")
     output_type_dropdown.pack(expand=True)
 
     process_button = ttk.Button(
-        root, text="Find references", command=lambda: "DO NOTHING"
+        root,
+        text="Find references",
+        command=lambda: threading.Thread(target=find_references).start(),
     )
     process_button.pack(expand=True)
+
+    PROCESSING_OUTPUT_LABEL = StringVar(root)
+    PROCESSING_OUTPUT_LABEL.set("")
+
+    loading_indicator = Label(root, textvariable=PROCESSING_OUTPUT_LABEL)
+    loading_indicator.pack(expand=True)
 
 
 if __name__ == "__main__":

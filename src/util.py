@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from math import floor
 from os import path
-from tkinter import Canvas, Label, Tk
+from tkinter import Canvas, Label
 from typing import List, Optional, Tuple
 
 import av
@@ -55,7 +55,7 @@ class PreviewInstance:
     Dataclass for abstracting GUI Preview data
     """
 
-    root: Optional[Tk] = None
+    video_path: Optional[str] = None
     title: Optional[Label] = None
     canvas: Optional[Canvas] = None
     preview: Optional[Tuple[ImageTk.PhotoImage, ...]] = None
@@ -91,6 +91,7 @@ class PreviewInstance:
         if prev is None:
             return -1
 
+        self.video_path = filepath
         filename = path.split(filepath)[-1]
         self.title.config(text=f"Previewing: {filename}")
 

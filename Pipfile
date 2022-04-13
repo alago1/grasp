@@ -10,6 +10,8 @@ numpy = "*"
 google-cloud-vision = "*"
 spacy = "*"
 wikipedia = "*"
+pandoc = "*"
+python-pptx = "*"
 
 [dev-packages]
 black = "*"
