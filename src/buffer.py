@@ -50,3 +50,16 @@ def get_frame_data(path: str) -> Iterator[Tuple[int, Image.Image]]:
             img = Image.fromarray(last_keyframe, "RGB")
 
             yield (frame.time, img)
+
+
+def check_black_percent(image: Image.Image) -> bool:
+    """
+    Returns boolean of whether an image is mostly black/dark
+    given a PIL Image object
+
+    If image is mostly black, returns false
+    Otherwise, returns true
+    """
+    pixels = image.getdata()
+    nblack = sum(pixel[0] + pixel[1] + pixel[2] < 150 for pixel in pixels)
+    return nblack / float(len(pixels)) <= 0.5
