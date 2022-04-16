@@ -1,3 +1,8 @@
 {
-    "workbench.settings.editor": "json"
+    "workbench.settings.editor": "json",
+    "python.testing.pytestArgs": [
+        "."
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

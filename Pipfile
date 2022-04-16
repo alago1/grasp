@@ -10,6 +10,8 @@ numpy = "*"
 google-cloud-vision = "*"
 spacy = "*"
 wikipedia = "*"
+pandoc = "*"
+python-pptx = "*"
 
 [dev-packages]
 black = "*"
@@ -18,6 +20,7 @@ pre-commit = "*"
 mypy = "*"
 types-pillow = "*"
 pylint = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.9"

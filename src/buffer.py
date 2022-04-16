@@ -1,6 +1,6 @@
 import operator
 from functools import reduce
-from typing import Iterator, cast
+from typing import Iterator, Tuple
 
 import av
 import numpy as np
@@ -9,13 +9,16 @@ from PIL import Image
 # pylint: disable=fixme
 
 
-def get_frame_data(path: str) -> Iterator[Image.Image]:
+def get_frame_data(path: str) -> Iterator[Tuple[int, Image.Image]]:
     """
     Returns iterator of relevant frames (Pillow Image)
     given a path to a mp4
-    """
 
-    # FIXME: Assert that path is valid
+    If path is not found, raises FileNotFoundError.
+    If path is of invalid file, raises InvalidDataError.
+    If path is of a directory, raises IsADirectoryError.
+    If path cannot be accessed due to permissions, raises PermissionError.
+    """
 
     with av.open(path) as container:
         stream = container.streams.video[0]
@@ -37,11 +40,13 @@ def get_frame_data(path: str) -> Iterator[Image.Image]:
             diff = abs(last_keyframe - array)
             diff_rate = np.count_nonzero(diff) / reduce(operator.mul, diff.shape)
 
-            # skip if less than 10% of frame changed since last key
-            if diff_rate <= 0.1:
+            # skip if less than 15% of frame changed since last key
+            if diff_rate <= 0.15:
                 continue
 
             last_keyframe = array
             last_pts = frame.pts
 
-            yield cast(Image.Image, last_keyframe.to_image())
+            img = Image.fromarray(last_keyframe, "RGB")
+
+            yield (frame.time, img)

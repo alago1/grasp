@@ -5,8 +5,14 @@ from google.cloud import vision
 from PIL import Image
 
 
+# ADD: Consider including a layer to processes out Watermarks and Logos
 def detect_text(image: Image.Image) -> str:
-    """Detects text in the file."""
+    """
+    Given a Pillow Image, makes an API call to Vision AI
+    and returns the raw text detected.
+
+    If there is a response error, raise Exception.
+    """
 
     client = vision.ImageAnnotatorClient()
 
