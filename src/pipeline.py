@@ -63,9 +63,9 @@ def export_txt(
                 filtered_refs.append((keyword, url))
 
             if filtered_refs:
-                output_file.write(f"## CURRENT TIMESTAMP: {timestamp}\n")
-                for item in filtered_refs:
-                    output_file.write(f"{item}\n")
+                output_file.write(f"## TIMESTAMP: {timestamp}\n")
+                for keyword, url in filtered_refs:
+                    output_file.write(f"'{keyword}': {url}\n")
 
 
 def process_references(
