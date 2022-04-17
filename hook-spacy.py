@@ -1,8 +1,8 @@
 """
 Combined hook for spacy and its dependency libraries; should probably be separated.
 """
-from PyInstaller.utils.hooks import collect_data_files
 import spacy
+from PyInstaller.utils.hooks import collect_data_files
 
 datas = collect_data_files("spacy", False)
 datas.append((spacy.util.get_data_path(), "spacy/data"))
