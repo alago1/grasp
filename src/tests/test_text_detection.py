@@ -1,4 +1,3 @@
-import pytest
 from PIL import Image
 
 # pylint: disable=too-few-public-methods, import-error
@@ -67,12 +66,6 @@ def test_high_blur() -> None:
     assert "this is blurry text h1" in text
     assert "this is blurry text h2" in text
     assert "this is blurry text h3" in text
-
-
-@pytest.mark.xfail(reason="input needs to be cleaned")
-def test_stylized_logo() -> None:  # type: ignore
-    """test text detection recognizes styling"""
-    assert TextDetectionProxy.clean_text("f12022.png") == "2022"
 
 
 def test_stylized_logo2() -> None:
