@@ -12,6 +12,7 @@ spacy = "*"
 wikipedia = "*"
 pandoc = "*"
 python-pptx = "*"
+fpdf = "*"
 
 [dev-packages]
 black = "*"

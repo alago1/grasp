@@ -7,6 +7,8 @@ from wikipedia import DisambiguationError, PageError
 
 NLP_MODEL = spacy.load("en_core_web_sm")
 
+# outputFile = open("output.txt", "a")
+
 
 @lru_cache(maxsize=1024)
 def get_single_reference(key: str) -> Optional[str]:
@@ -20,6 +22,7 @@ def get_single_reference(key: str) -> Optional[str]:
     try:
         query = wikipedia.page(key)
         print(f'Added "{key}": {query.url}')
+        # outputFile.write(f'"{key}": {query.url}\n')
         return cast(str, query.url)
     except DisambiguationError:
         print(f'Ignoring "{key}" (Ambiguous)')
@@ -56,5 +59,6 @@ def get_references(text: str) -> List[Tuple[str, str]]:
 
         urls.add(url)
         references.append((chunk.text, url))
+        # outputFile.write(f'"{chunk.text}": {url}')
 
     return references

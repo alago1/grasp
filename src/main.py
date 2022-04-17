@@ -1,5 +1,6 @@
+# pylint: disable=missing-function-docstring, global-statement, import-error
+
 import threading
-import time
 import tkinter as tk
 from os import path
 from tkinter import NE, Canvas, Label, OptionMenu, StringVar
@@ -10,10 +11,8 @@ from typing import Optional
 
 from PIL import Image, ImageTk
 
+from pipeline import process_references
 from util import PreviewInstance
-
-# pylint: disable=missing-function-docstring, global-statement
-
 
 PREVIEW_PLAYER = PreviewInstance()
 OUTPUT_FOLDER_PATH: Optional[str] = None
@@ -68,9 +67,7 @@ def select_file(root: tk.Tk) -> None:
 
 
 def find_references() -> None:
-    # TODO: call functions to start exporting process
-
-    if PROCESSING_OUTPUT_LABEL is None:
+    if PROCESSING_OUTPUT_LABEL is None or OUTPUT_FILETYPE is None:
         return
 
     if PREVIEW_PLAYER.video_path is None:
@@ -85,7 +82,9 @@ def find_references() -> None:
 
     PROCESSING_OUTPUT_LABEL.set("Parsing References...")
 
-    time.sleep(5)
+    process_references(
+        PREVIEW_PLAYER.video_path, OUTPUT_FOLDER_PATH, OUTPUT_FILETYPE.get()
+    )
 
     PROCESSING_OUTPUT_LABEL.set("Successfully exported references")
     mb.showinfo(
@@ -137,7 +136,7 @@ def main(root: tk.Tk) -> None:
     OUTPUT_FILETYPE = StringVar(root)
     OUTPUT_FILETYPE.set("TXT")
 
-    output_type_dropdown = OptionMenu(root, OUTPUT_FILETYPE, "TXT", "PDF")
+    output_type_dropdown = OptionMenu(root, OUTPUT_FILETYPE, "TXT", "PPTX")
     output_type_dropdown.pack(expand=True)
 
     process_button = ttk.Button(
